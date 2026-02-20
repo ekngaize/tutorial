@@ -1,7 +1,9 @@
 from sqlalchemy import select, String, DateTime, Float
-from sqlalchemy.orm import mapped_column, Mapped, declarative_base
+from sqlalchemy.orm import mapped_column, Mapped, DeclarativeBase
 
-Base = declarative_base()
+
+class Base(DeclarativeBase):
+    pass
 
 
 class MesureL3(Base):
