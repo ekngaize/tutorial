@@ -7,13 +7,29 @@ load_dotenv()
 
 
 def connect_to_yaaps_db():
-    db_name = os.getenv("YAAPS_DB_NAME")
-    user = os.getenv("YAAPS_DB_USER")
-    password = os.getenv("YAAPS_DB_PASSWORD")
-    host = os.getenv("YAAPS_DB_HOST")
-    port = os.getenv("YAAPS_DB_PORT")
-    db_url=f"postgresql://{user}:{password}@{host}:{port}/{db_name}"
-    engine = create_engine(db_url)
+    required = {
+        "YAAPS_DB_NAME": os.getenv("YAAPS_DB_NAME"),
+        "YAAPS_DB_USER": os.getenv("YAAPS_DB_USER"),
+        "YAAPS_DB_PASSWORD": os.getenv("YAAPS_DB_PASSWORD"),
+        "YAAPS_DB_HOST": os.getenv("YAAPS_DB_HOST"),
+        "YAAPS_DB_PORT": os.getenv("YAAPS_DB_PORT"),
+    }
+
+    missing = [key for key, val in required.items() if not val]
+    if missing:
+        raise EnvironmentError(f"Missing required environment variables: {', '.join(missing)}")
+
+    db_url = (
+        f"postgresql://{required['YAAPS_DB_USER']}:{required['YAAPS_DB_PASSWORD']}"
+        f"@{required['YAAPS_DB_HOST']}:{required['YAAPS_DB_PORT']}/{required['YAAPS_DB_NAME']}"
+    )
+
+    try:
+        engine = create_engine(db_url)
+        with engine.connect() as conn:
+            conn.execute(text("SELECT 1"))
+    except SQLAlchemyError as e:
+        raise ConnectionError(f"Failed to connect to YAAPS database: {e}") from e
 
     return engine
 
