@@ -1,0 +1,7 @@
+statsmodels
+numpy
+pandas
+matplotlib
+scipy
+ipykernel
+sqlalchemy
