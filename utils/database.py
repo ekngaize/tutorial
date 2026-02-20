@@ -23,16 +23,7 @@ def connect_to_yaaps_db():
         f"postgresql://{required['YAAPS_DB_USER']}:{required['YAAPS_DB_PASSWORD']}"
         f"@{required['YAAPS_DB_HOST']}:{required['YAAPS_DB_PORT']}/{required['YAAPS_DB_NAME']}"
     )
-
-    try:
-        engine = create_engine(db_url)
-        with engine.connect() as conn:
-            conn.execute(text("SELECT 1"))
-    except SQLAlchemyError as e:
-        raise ConnectionError(f"Failed to connect to YAAPS database: {e}") from e
-
-    return engine
-
+    return create_engine(db_url)
 
 def query_insar_from_pid(pid_list):
     pid_list = ", ".join(f"'{i}'" for i in pid_list)
