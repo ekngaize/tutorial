@@ -1,13 +1,19 @@
+import os
+
+from dotenv import load_dotenv
 from sqlalchemy import create_engine
 
-def connect_to_yaaps_db(credentials):
-    db_name = "insar_to_rga"
-    user = credentials['user']
-    password = credentials['password']
-    host = "192.168.100.39"
-    port = "5432"
+load_dotenv()
 
-    engine = create_engine(f"postgresql://{user}:{password}@{host}:{port}/{db_name}")
+
+def connect_to_yaaps_db():
+    db_name = os.getenv("YAAPS_DB_NAME")
+    user = os.getenv("YAAPS_DB_USER")
+    password = os.getenv("YAAPS_DB_PASSWORD")
+    host = os.getenv("YAAPS_DB_HOST")
+    port = os.getenv("YAAPS_DB_PORT")
+    db_url=f"postgresql://{user}:{password}@{host}:{port}/{db_name}"
+    engine = create_engine(db_url)
 
     return engine
 

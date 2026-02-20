@@ -5,3 +5,5 @@ matplotlib
 scipy
 ipykernel
 sqlalchemy
+python-dotenv
+psycopg2-binary
